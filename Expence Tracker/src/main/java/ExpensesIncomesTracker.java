@@ -26,7 +26,7 @@ public class ExpensesIncomesTracker extends JFrame{
 
     public ExpensesIncomesTracker() {
         try {
-            UIManager.setLookAndFeel(new FlatDarkLaf());
+            UIManager.setLookAndFeel(new LookAndFeel());
         } catch (UnsupportedLookAndFeelException ex) {
             ex.printStackTrace();
             System.err.println("Failed to Set FlatDarkLaf LookAndFeel");
