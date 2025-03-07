@@ -78,5 +78,126 @@ public class ExpensesIncomesTracker extends JFrame{
         setLocationRelativeTo(null);
         setVisible(true);
     }
+
+
+    private void addEntry() {
+        Date selectedDate = dateChooser.getDate();
+        if (selectedDate == null) {
+            JOptionPane.showMessageDialog(this, "Select a Date", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        String date = new SimpleDateFormat("yyyy-MM-dd").format(selectedDate);
+        String category = (String) categoryComboBox.getSelectedItem();
+        String amountStr = amountField.getText();
+        String type = (String) typeComboBox.getSelectedItem();
+        double amount;
+
+        if (amountStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Enter the Amount", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            amount = Double.parseDouble(amountStr);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Invalid Amount Format", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (type.equals("Expense")) {
+            amount *= -1;
+        }
+
+        ExpenseIncomeEntry entry = new ExpenseIncomeEntry(date, category, amount, type);
+        tableModel.addEntry(entry);
+
+        balance += amount;
+        balanceLabel.setText("Balance: Tk." + balance);
+
+        clearInputFields();
+    }
+
+    private void editEntry() {
+        int selectedRowIndex = table.getSelectedRow();
+        if (selectedRowIndex == -1) {
+            JOptionPane.showMessageDialog(this, "Select a row to edit", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Date selectedDate = dateChooser.getDate();
+        if (selectedDate == null) {
+            JOptionPane.showMessageDialog(this, "Select a Date", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        String updatedDate = new SimpleDateFormat("yyyy-MM-dd").format(selectedDate);
+        String updatedCategory = (String) categoryComboBox.getSelectedItem();
+        String updatedAmountStr = amountField.getText();
+        String updatedType = (String) typeComboBox.getSelectedItem();
+
+        if (updatedAmountStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Enter the Updated Amount", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            double updatedAmount = Double.parseDouble(updatedAmountStr);
+            if (updatedType.equals("Expense")) {
+                updatedAmount *= -1;
+            }
+
+            ExpenseIncomeEntry updatedEntry = new ExpenseIncomeEntry(updatedDate, updatedCategory, updatedAmount, updatedType);
+            tableModel.editEntry(selectedRowIndex, updatedEntry);
+
+            balance += updatedAmount;
+            balanceLabel.setText("Balance: Tk." + balance);
+
+            clearInputFields();
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Invalid Updated Amount Format", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void removeEntry() {
+        int selectedRowIndex = table.getSelectedRow();
+        if (selectedRowIndex == -1) {
+            JOptionPane.showMessageDialog(this, "Select a row to remove", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        double removedAmount = (double) table.getValueAt(selectedRowIndex, 2);
+        tableModel.removeEntry(selectedRowIndex);
+
+        balance -= removedAmount;
+        balanceLabel.setText("Balance: Tk." + balance);
+    }
+
+    private void showExpenseSummary() {
+        Map<String, Double> categoryTotals = new HashMap<>();
+        for (int i = 0; i < tableModel.getRowCount(); i++) {
+            String category = (String) tableModel.getValueAt(i, 1);
+            double amount = (double) tableModel.getValueAt(i, 2);
+            if (amount < 0) {
+                categoryTotals.put(category, categoryTotals.getOrDefault(category, 0.0) + Math.abs(amount));
+            }
+        }
+
+        StringBuilder summary = new StringBuilder("Expense Summary:\n");
+        for (Map.Entry<String, Double> entry : categoryTotals.entrySet()) {
+            summary.append(entry.getKey()).append(" : ").append(entry.getValue()).append("\n");
+        }
+
+        JOptionPane.showMessageDialog(this, summary.toString(), "Expense Summary", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void clearInputFields() {
+        dateChooser.setDate(null);
+        amountField.setText("");
+        categoryComboBox.setSelectedIndex(0);
+        typeComboBox.setSelectedIndex(0);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(ExpensesIncomesTracker::new);
+    }
     
 }
