@@ -3,7 +3,7 @@ package main.java;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
+import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
 public class ExpenseIncomeTableModel extends AbstractTableModel{
