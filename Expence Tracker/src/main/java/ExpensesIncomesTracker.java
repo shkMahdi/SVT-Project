@@ -1,8 +1,5 @@
-package main.java;
-
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.toedter.calendar.JDateChooser;
-
 import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
@@ -27,7 +24,7 @@ public class ExpensesIncomesTracker extends JFrame{
 
     public ExpensesIncomesTracker() {
         try {
-            UIManager.setLookAndFeel(new LookAndFeel());
+            UIManager.setLookAndFeel(new FlatDarkLaf());
         } catch (UnsupportedLookAndFeelException ex) {
             ex.printStackTrace();
             System.err.println("Failed to Set FlatDarkLaf LookAndFeel");

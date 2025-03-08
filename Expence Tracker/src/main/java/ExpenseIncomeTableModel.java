@@ -1,5 +1,3 @@
-package main.java;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -10,7 +8,7 @@ public class ExpenseIncomeTableModel extends AbstractTableModel{
     private final List<ExpenseIncomeEntry> entries;
     private final String[] columNames = {"Date", "Category", "Amount", "Type"};
 
-    public ExpenseIncomeTableModel() { entries = new Arraylist<>(); }
+    public ExpenseIncomeTableModel() { entries = new ArrayList<>(); }
 
     public void addEntry(ExpenseIncomeEntry entry){
         entries.add(entry);
@@ -75,12 +73,12 @@ public class ExpenseIncomeTableModel extends AbstractTableModel{
 
     @Override
     public int getColumnCount() {
-        return columnNames.length;
+        return columNames.length;
     }
 
     @Override
     public String getColumnName(int column) {
-        return columnNames[column];
+        return columNames[column];
     }
 
     @Override
