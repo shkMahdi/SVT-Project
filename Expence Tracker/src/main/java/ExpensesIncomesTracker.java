@@ -121,39 +121,46 @@ public class ExpensesIncomesTracker extends JFrame{
             JOptionPane.showMessageDialog(this, "Select a row to edit", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
+    
         Date selectedDate = dateChooser.getDate();
         if (selectedDate == null) {
             JOptionPane.showMessageDialog(this, "Select a Date", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
+    
         String updatedDate = new SimpleDateFormat("yyyy-MM-dd").format(selectedDate);
         String updatedCategory = (String) categoryComboBox.getSelectedItem();
         String updatedAmountStr = amountField.getText();
         String updatedType = (String) typeComboBox.getSelectedItem();
-
+    
         if (updatedAmountStr.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Enter the Updated Amount", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
+    
         try {
             double updatedAmount = Double.parseDouble(updatedAmountStr);
             if (updatedType.equals("Expense")) {
                 updatedAmount *= -1;
             }
-
+    
+            // Get the original amount before editing
+            double originalAmount = (double) tableModel.getValueAt(selectedRowIndex, 2);
+    
+            // Update balance correctly
+            balance -= originalAmount;  // Remove the original amount
+            balance += updatedAmount;   // Add the updated amount
+    
             ExpenseIncomeEntry updatedEntry = new ExpenseIncomeEntry(updatedDate, updatedCategory, updatedAmount, updatedType);
             tableModel.editEntry(selectedRowIndex, updatedEntry);
-
-            balance += updatedAmount;
+    
             balanceLabel.setText("Balance: Tk." + balance);
-
             clearInputFields();
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Invalid Updated Amount Format", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
 
     private void removeEntry() {
         int selectedRowIndex = table.getSelectedRow();
