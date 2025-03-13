@@ -38,4 +38,14 @@ class ExpenseIncomeTableModelTest {
         assertEquals("Income", tableModel.getValueAt(0, 3));
     }
 
+    @Test
+    void testRemoveEntry(){
+        ExpenseIncomeEntry entry = new ExpenseIncomeEntry("2025-03-13", "Food & Drink", 500.0, "Expense");
+        tableModel.addEntry(entry);
+
+        tableModel.removeEntry(0);
+
+        assertEquals(0, tableModel.getRowCount());
+    }
+
 }
