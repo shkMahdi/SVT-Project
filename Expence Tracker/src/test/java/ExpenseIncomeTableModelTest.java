@@ -17,6 +17,8 @@ class ExpenseIncomeTableModelTest {
 
         tableModel.addEntry(entry);
 
+        assertTrue(tableModel.getRowCount() > 0, "Row count should increase after adding an entry");
+
         assertEquals(1, tableModel.getRowCount());
         assertEquals("2025-03-13", tableModel.getValueAt(0, 0));
         assertEquals("Food & Drink", tableModel.getValueAt(0, 1));
