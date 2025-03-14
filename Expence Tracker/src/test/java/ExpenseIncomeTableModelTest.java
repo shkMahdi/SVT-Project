@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -35,6 +36,7 @@ class ExpenseIncomeTableModelTest {
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
+    // add entry with method source
     @ParameterizedTest
     @CsvSource({
             "2025-03-13, Food & Drink, 500.0, Expense",
@@ -71,27 +73,7 @@ class ExpenseIncomeTableModelTest {
         assertFalse((double) tableModel.getValueAt(0, 2) == 500.0, "Amount should not be 500.0");
         assertNotEquals("Expence", tableModel.getValueAt(0, 3));
     }
-    //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    @Test
-    void testRemoveEntry(){
-        ExpenseIncomeEntry entry = new ExpenseIncomeEntry("2025-03-13", "Food & Drink", 500.0, "Expense");
-        tableModel.addEntry(entry);
 
-        tableModel.removeEntry(0);
-
-        assertTrue(tableModel.getRowCount() ==0, "Row count should be 0");
-    }
-    //--------------------------------------------------------------------------------------------------------------------------------------------------------
-
-    //AddEntry using ValueSource
-    @ParameterizedTest
-    @ValueSource(strings = {"Food & Drink", "Transport", "Grocery", "Others"})
-    void testAddEntryWithDifferentCategories(String category) {
-        ExpenseIncomeEntry entry = new ExpenseIncomeEntry("2025-03-13", category, 500.0, "Expense");
-        tableModel.addEntry(entry);
-
-        assertEquals(category, tableModel.getValueAt(0, 1));
-    }
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
     // testing EditEntry using MethodSource
@@ -120,6 +102,52 @@ class ExpenseIncomeTableModelTest {
         assertEquals(newType, tableModel.getValueAt(0, 3));
     }
 
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    @ParameterizedTest
+    @CsvFileSource(resources = "/edit_entries.csv", numLinesToSkip = 1)
+    void testEditEntry2(int index, String date, String category, double amount, String type) {
+        // Initialize tableModel inside the test
+        ExpenseIncomeTableModel tableModel = new ExpenseIncomeTableModel();
+
+        // Add initial entries before editing
+        tableModel.addEntry(new ExpenseIncomeEntry("2025-03-13", "Food & Drink", 500.0, "Expense"));
+        tableModel.addEntry(new ExpenseIncomeEntry("2025-03-14", "Entertainment", 150.0, "Expense"));
+
+        // Edit the entry at the given index
+        ExpenseIncomeEntry updatedEntry = new ExpenseIncomeEntry(date, category, amount, type);
+        tableModel.editEntry(index, updatedEntry);
+
+        // Assertions to verify the update
+        assertNotNull(tableModel.getValueAt(index, 0)); // Ensure value is not null
+        assertEquals(date, tableModel.getValueAt(index, 0));
+        assertEquals(category, tableModel.getValueAt(index, 1));
+        assertEquals(amount, (double) tableModel.getValueAt(index, 2));
+        assertEquals(type, tableModel.getValueAt(index, 3));
+    }
+
+
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+    @Test
+    void testRemoveEntry(){
+        ExpenseIncomeEntry entry = new ExpenseIncomeEntry("2025-03-13", "Food & Drink", 500.0, "Expense");
+        tableModel.addEntry(entry);
+
+        tableModel.removeEntry(0);
+
+        assertTrue(tableModel.getRowCount() ==0, "Row count should be 0");
+    }
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    //AddEntry using ValueSource
+    @ParameterizedTest
+    @ValueSource(strings = {"Food & Drink", "Transport", "Grocery", "Others"})
+    void testAddEntryWithDifferentCategories(String category) {
+        ExpenseIncomeEntry entry = new ExpenseIncomeEntry("2025-03-13", category, 500.0, "Expense");
+        tableModel.addEntry(entry);
+
+        assertEquals(category, tableModel.getValueAt(0, 1));
+    }
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
     // testing RemoveEntry using method source
