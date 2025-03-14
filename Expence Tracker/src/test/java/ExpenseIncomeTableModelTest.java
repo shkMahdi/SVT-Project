@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -31,7 +32,31 @@ class ExpenseIncomeTableModelTest {
         assertEquals(500.0, (double) tableModel.getValueAt(0, 2));
         assertEquals("Expense", tableModel.getValueAt(0, 3));
     }
+
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    @ParameterizedTest
+    @CsvSource({
+            "2025-03-13, Food & Drink, 500.0, Expense",
+            "2025-03-14, Grocery, 1000.0, Income",
+            "2025-03-15, Transport, 200.0, Expense"
+    })
+    void testAddEntry2(String date, String category, double amount, String type) {
+        ExpenseIncomeEntry entry = new ExpenseIncomeEntry(date, category, amount, type);
+        tableModel.addEntry(entry);
+
+        // Check if the last added entry matches
+        int lastIndex = tableModel.getRowCount() - 1;
+
+        assertNotNull(tableModel.getValueAt(lastIndex, 1)); // Check category is not null
+
+        assertEquals(date, tableModel.getValueAt(lastIndex, 0));
+        assertEquals(category, tableModel.getValueAt(lastIndex, 1));
+        assertEquals(amount, (double) tableModel.getValueAt(lastIndex, 2));
+        assertEquals(type, tableModel.getValueAt(lastIndex, 3));
+    }
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+
     @Test
     void testEditEntry() {
         ExpenseIncomeEntry entry = new ExpenseIncomeEntry("2025-03-13", "Food & Drink", 500.0, "Expense");
