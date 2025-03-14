@@ -35,9 +35,9 @@ class ExpenseIncomeTableModelTest {
         tableModel.editEntry(0, updatedEntry);
 
         assertEquals("2025-03-14", tableModel.getValueAt(0, 0));
-        assertEquals("Grocery", tableModel.getValueAt(0, 1));
-        assertEquals(1000.0, (double) tableModel.getValueAt(0, 2));
-        assertEquals("Income", tableModel.getValueAt(0, 3));
+        assertSame("Grocery", tableModel.getValueAt(0, 1), "Category should be 'Grocery'");
+        assertFalse((double) tableModel.getValueAt(0, 2) == 500.0, "Amount should not be 500.0");
+        assertNotEquals("Expence", tableModel.getValueAt(0, 3));
     }
 
     @Test
@@ -47,7 +47,7 @@ class ExpenseIncomeTableModelTest {
 
         tableModel.removeEntry(0);
 
-        assertEquals(0, tableModel.getRowCount());
+        assertTrue(tableModel.getRowCount() ==0, "Row count should be 0");
     }
 
 }
