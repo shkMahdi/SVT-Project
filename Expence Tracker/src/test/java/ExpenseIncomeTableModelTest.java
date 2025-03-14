@@ -31,7 +31,7 @@ class ExpenseIncomeTableModelTest {
         assertEquals(500.0, (double) tableModel.getValueAt(0, 2));
         assertEquals("Expense", tableModel.getValueAt(0, 3));
     }
-
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
     @Test
     void testEditEntry() {
         ExpenseIncomeEntry entry = new ExpenseIncomeEntry("2025-03-13", "Food & Drink", 500.0, "Expense");
@@ -46,7 +46,7 @@ class ExpenseIncomeTableModelTest {
         assertFalse((double) tableModel.getValueAt(0, 2) == 500.0, "Amount should not be 500.0");
         assertNotEquals("Expence", tableModel.getValueAt(0, 3));
     }
-
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
     @Test
     void testRemoveEntry(){
         ExpenseIncomeEntry entry = new ExpenseIncomeEntry("2025-03-13", "Food & Drink", 500.0, "Expense");
@@ -56,6 +56,7 @@ class ExpenseIncomeTableModelTest {
 
         assertTrue(tableModel.getRowCount() ==0, "Row count should be 0");
     }
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
     //AddEntry using ValueSource
     @ParameterizedTest
@@ -66,8 +67,9 @@ class ExpenseIncomeTableModelTest {
 
         assertEquals(category, tableModel.getValueAt(0, 1));
     }
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    //EditEntry using MethodSource
+    // testing EditEntry using MethodSource
     static Stream<Object[]> provideEditEntryData() {
         return Stream.of(
                 new Object[]{"2025-03-14", "Grocery", 1000.0, "Income"},
@@ -75,7 +77,6 @@ class ExpenseIncomeTableModelTest {
                 new Object[]{"2025-03-16", "Entertainment", 500.0, "Expense"}
         );
     }
-
     @ParameterizedTest
     @MethodSource("provideEditEntryData")
     void testEditEntryWithChangingEntries(String newDate, String newCategory, double newAmount, String newType) {
@@ -92,6 +93,32 @@ class ExpenseIncomeTableModelTest {
         assertEquals(newCategory, tableModel.getValueAt(0, 1));
         assertEquals(newAmount, (double) tableModel.getValueAt(0, 2));
         assertEquals(newType, tableModel.getValueAt(0, 3));
+    }
+
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    // testing RemoveEntry using method source
+    static Stream<Integer> provideRemoveEntryIndexes() {
+        return Stream.of(0, 1); // Removing the first and second entries
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideRemoveEntryIndexes")
+    void testRemoveEntry2(int indexToRemove) {
+        tableModel = new ExpenseIncomeTableModel(); // Reset before each test
+
+        // Adding multiple entries
+        tableModel.addEntry(new ExpenseIncomeEntry("2025-03-13", "Food & Drink", 500.0, "Expense"));
+        tableModel.addEntry(new ExpenseIncomeEntry("2025-03-14", "Grocery", 1000.0, "Income"));
+
+        // Ensure valid index before removing
+        assertTrue(indexToRemove < tableModel.getRowCount());
+
+        // Remove entry at the given index
+        tableModel.removeEntry(indexToRemove);
+
+        // Assert that row count decreases after removal
+        assertTrue(tableModel.getRowCount() < 2);
     }
 
 }
