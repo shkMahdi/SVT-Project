@@ -25,31 +25,6 @@ public class ExpenseIncomeTableModel extends AbstractTableModel{
         fireTableRowsDeleted(rowIndex, rowIndex);
     }
 
-    public void sortByColumn(int columnIndex) {
-        Collections.sort(entries, new Comparator<ExpenseIncomeEntry>() {
-            @SuppressWarnings("unchecked")
-            @Override
-            public int compare(ExpenseIncomeEntry e1, ExpenseIncomeEntry e2) {
-                Comparable<Object> value1 = (Comparable<Object>) getColumnValue(e1, columnIndex);
-                Comparable<Object> value2 = (Comparable<Object>) getColumnValue(e2, columnIndex);
-                return value1.compareTo(value2);
-            }
-        });
-        fireTableDataChanged();
-    }
-    
-
-    public void formatDateColumn(int columnIndex, String dateFormat) {
-        for (int i = 0; i < entries.size(); i++) {
-            fireTableCellUpdated(i, columnIndex);
-        }
-    }
-
-    public void filterByType(String type) {
-        entries.removeIf(entry -> !entry.getType().equals(type));
-        fireTableDataChanged();
-    }
-
     private Object getColumnValue(ExpenseIncomeEntry entry, int columnIndex) {
         switch (columnIndex) {
             case 0:
@@ -64,8 +39,7 @@ public class ExpenseIncomeTableModel extends AbstractTableModel{
                 return null;
         }
     }
-
-
+    
     @Override
     public int getRowCount() {
         return entries.size();
