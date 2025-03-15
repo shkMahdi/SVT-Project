@@ -26,7 +26,7 @@ class ExpenseIncomeEntryTest {
     @Test
     void testNegativeAmount() {
         ExpenseIncomeEntry entry = new ExpenseIncomeEntry("2025-03-13", "Transport", -100.00, "Expense");
-        
+
         assertEquals(-100.00, entry.getAmount(), "Amount should be negative for an expense");
     }
 
