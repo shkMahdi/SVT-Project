@@ -43,7 +43,7 @@ public class ExpensesIncomesTracker extends JFrame{
         viewSummaryButton = new JButton("View Summary");
         balanceLabel = new JLabel("Balance: Tk " + balance);
 
-        addButton.addActionListener(e -> addEntry());
+        addButton.addActionListener(e -> addEntry());   // lambda omits actionPerformed()
         editButton.addActionListener(e -> editEntry());
         removeButton.addActionListener(e -> removeEntry());
         viewSummaryButton.addActionListener(e -> showExpenseSummary());
@@ -64,6 +64,7 @@ public class ExpensesIncomesTracker extends JFrame{
 
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         bottomPanel.add(balanceLabel);
+        
         setLayout(new BorderLayout());
 
         add(inputPanel, BorderLayout.NORTH);
