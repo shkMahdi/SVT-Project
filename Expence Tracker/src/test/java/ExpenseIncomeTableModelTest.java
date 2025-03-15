@@ -174,4 +174,21 @@ class ExpenseIncomeTableModelTest {
         assertTrue(tableModel.getRowCount() < 2);
     }
 
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    @Test
+    void testRemoveEntryThrowsWhenIndexInvalid() {
+
+        ExpenseIncomeTableModel tableModel = new ExpenseIncomeTableModel();
+        ExpenseIncomeEntry entry1 = new ExpenseIncomeEntry("2025-03-13", "Food", 250.50, "Expense");
+
+        assertThrows(IndexOutOfBoundsException.class, () -> tableModel.removeEntry(0),
+                "Removing from an empty list should throw IndexOutOfBoundsException");
+
+        
+        tableModel.addEntry(entry1);
+        assertDoesNotThrow(() -> tableModel.removeEntry(0),
+                "Removing a valid entry should not throw an exception");
+    }
+
 }
